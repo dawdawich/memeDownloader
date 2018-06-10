@@ -16,17 +16,13 @@ import java.util.List;
 
 public class ImageSaver {
 
-    private static String path;
+    private String path;
 
-    static {
-        try {
-            path = Configuration.getInstance().getPath();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public ImageSaver(String path) {
+        this.path = path;
     }
 
-    public static void saveFile(List<HashMap<String, String>> list) {
+    public void saveFile(List<HashMap<String, String>> list) {
         list
         .forEach(s -> {
             try {
@@ -53,7 +49,7 @@ public class ImageSaver {
         list.clear();
     }
 
-    private static void saveFiles(HashMap<String, String> map, JSONArray jsonArray) throws Exception {
+    private void saveFiles(HashMap<String, String> map, JSONArray jsonArray) throws Exception {
         File file = new File(path + File.separator + map.get("date"));
         file.mkdirs();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -62,12 +58,11 @@ public class ImageSaver {
 
     }
 
-    private static byte[] recoverImageFromUrl(String urlText) throws Exception {
+    private byte[] recoverImageFromUrl(String urlText) throws Exception {
         URL url = new URL(urlText);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-
         try (InputStream inputStream = url.openStream()) {
-            int n = 0;
+            int n;
             byte [] buffer = new byte[ 1024 ];
             while (-1 != (n = inputStream.read(buffer))) {
                 output.write(buffer, 0, n);
@@ -75,7 +70,6 @@ public class ImageSaver {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return output.toByteArray();
     }
 

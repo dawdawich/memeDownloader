@@ -13,17 +13,13 @@ public class WallProcessor implements Runnable {
     private int id = 0;
     private VKClient client;
     private boolean isDomain;
+    private ImageSaver saver;
 
-    public WallProcessor(@Nonnull String domain, @Nonnull VKClient client) {
+    public WallProcessor(@Nonnull String domain, @Nonnull VKClient client, ImageSaver saver) {
         this.domain = domain;
         this.client = client;
         this.isDomain = true;
-    }
-
-    public WallProcessor(@Nonnull Integer id, @Nonnull VKClient client) {
-        this.id = id;
-        this.client = client;
-        this.isDomain = false;
+        this.saver = saver;
     }
 
     @Override
@@ -45,10 +41,10 @@ public class WallProcessor implements Runnable {
 
                 if (isDomain) {
                     List<HashMap<String, String>> data = ProcessResponse.process(getResponse, domain);
-                    ImageSaver.saveFile(data);
+                    saver.saveFile(data);
                 } else {
                     List<HashMap<String, String>> data = ProcessResponse.process(getResponse, "" + id);
-                    ImageSaver.saveFile(data);
+                    saver.saveFile(data);
                 }
 
 
